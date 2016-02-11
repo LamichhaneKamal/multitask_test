@@ -1,0 +1,348 @@
+   1               		.file	"avr_kernel.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__RAMPZ__ = 0x3b
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.Ltext0:
+  10               		.cfi_sections	.debug_frame
+  11               	.global	swap_endiannes
+  13               	swap_endiannes:
+  14               	.LFB0:
+  15               		.file 1 "avr_kernel.c"
+   1:avr_kernel.c  **** #include <avr/io.h>
+   2:avr_kernel.c  **** #include <inttypes.h>
+   3:avr_kernel.c  **** #include "avr_kernel.h"
+   4:avr_kernel.c  **** #include "Task_switch.c"
+   5:avr_kernel.c  **** 
+   6:avr_kernel.c  **** #include "avr_kernel_defs.h"
+   7:avr_kernel.c  **** 
+   8:avr_kernel.c  **** volatile uint16_t stack[STACK_SIZE];
+   9:avr_kernel.c  **** volatile uint16_t sp[4] = {stack + STACK_SIZE/4 - 3, stack + STACK_SIZE/2 - 3, stack + 3*STACK_SIZE
+  10:avr_kernel.c  **** volatile int current_task = 0;
+  11:avr_kernel.c  **** //volatile uint16_t SP;
+  12:avr_kernel.c  **** void dispatcher();
+  13:avr_kernel.c  **** 
+  14:avr_kernel.c  **** void task_0();
+  15:avr_kernel.c  **** void task_1();
+  16:avr_kernel.c  **** void task_2();
+  17:avr_kernel.c  **** void task_3();
+  18:avr_kernel.c  **** 
+  19:avr_kernel.c  **** uint16_t swap_endiannes (uint16_t x)
+  20:avr_kernel.c  **** {
+  16               		.loc 1 20 0
+  17               		.cfi_startproc
+  18               	.LVL0:
+  19               	/* prologue: function */
+  20               	/* frame size = 0 */
+  21               	/* stack size = 0 */
+  22               	.L__stack_usage = 0
+  21:avr_kernel.c  ****     return ((x & 0xFF) << 8) | ((x & 0xFF00) >> 8); 
+  22:avr_kernel.c  **** }
+  23               		.loc 1 22 0
+  24 0000 9827      		eor r25,r24
+  25 0002 8927      		eor r24,r25
+  26               	.LVL1:
+  27 0004 9827      		eor r25,r24
+  28 0006 0895      		ret
+  29               		.cfi_endproc
+  30               	.LFE0:
+  32               	.global	avr_kernel_init
+  34               	avr_kernel_init:
+  35               	.LFB1:
+  23:avr_kernel.c  **** 
+  24:avr_kernel.c  **** void avr_kernel_init()
+  25:avr_kernel.c  **** {
+  36               		.loc 1 25 0
+  37               		.cfi_startproc
+  38               	/* prologue: function */
+  39               	/* frame size = 0 */
+  40               	/* stack size = 0 */
+  41               	.L__stack_usage = 0
+  42               	.LVL2:
+  43               	.LBB10:
+  44               	.LBB11:
+  21:avr_kernel.c  ****     return ((x & 0xFF) << 8) | ((x & 0xFF00) >> 8); 
+  45               		.loc 1 21 0
+  46 0008 80E0      		ldi r24,lo8(gs(task_0))
+  47 000a 90E0      		ldi r25,hi8(gs(task_0))
+  48 000c 9827      		eor r25,r24
+  49 000e 8927      		eor r24,r25
+  50 0010 9827      		eor r25,r24
+  51               	.LBE11:
+  52               	.LBE10:
+  26:avr_kernel.c  ****     stack[STACK_SIZE/4 - 2] = swap_endiannes(task_0);
+  53               		.loc 1 26 0
+  54 0012 9093 0000 		sts stack+508+1,r25
+  55 0016 8093 0000 		sts stack+508,r24
+  56               	.LVL3:
+  57               	.LBB12:
+  58               	.LBB13:
+  21:avr_kernel.c  ****     return ((x & 0xFF) << 8) | ((x & 0xFF00) >> 8); 
+  59               		.loc 1 21 0
+  60 001a 80E0      		ldi r24,lo8(gs(task_1))
+  61 001c 90E0      		ldi r25,hi8(gs(task_1))
+  62 001e 9827      		eor r25,r24
+  63 0020 8927      		eor r24,r25
+  64 0022 9827      		eor r25,r24
+  65               	.LBE13:
+  66               	.LBE12:
+  27:avr_kernel.c  ****     stack[STACK_SIZE/2 - 2] = swap_endiannes(task_1);
+  67               		.loc 1 27 0
+  68 0024 9093 0000 		sts stack+1020+1,r25
+  69 0028 8093 0000 		sts stack+1020,r24
+  70               	.LVL4:
+  71               	.LBB14:
+  72               	.LBB15:
+  21:avr_kernel.c  ****     return ((x & 0xFF) << 8) | ((x & 0xFF00) >> 8); 
+  73               		.loc 1 21 0
+  74 002c 80E0      		ldi r24,lo8(gs(task_2))
+  75 002e 90E0      		ldi r25,hi8(gs(task_2))
+  76 0030 9827      		eor r25,r24
+  77 0032 8927      		eor r24,r25
+  78 0034 9827      		eor r25,r24
+  79               	.LBE15:
+  80               	.LBE14:
+  28:avr_kernel.c  ****     stack[3*STACK_SIZE/4 - 2] = swap_endiannes(task_2);
+  81               		.loc 1 28 0
+  82 0036 9093 0000 		sts stack+1532+1,r25
+  83 003a 8093 0000 		sts stack+1532,r24
+  84               	.LVL5:
+  85               	.LBB16:
+  86               	.LBB17:
+  21:avr_kernel.c  ****     return ((x & 0xFF) << 8) | ((x & 0xFF00) >> 8); 
+  87               		.loc 1 21 0
+  88 003e 80E0      		ldi r24,lo8(gs(task_3))
+  89 0040 90E0      		ldi r25,hi8(gs(task_3))
+  90 0042 9827      		eor r25,r24
+  91 0044 8927      		eor r24,r25
+  92 0046 9827      		eor r25,r24
+  93               	.LBE17:
+  94               	.LBE16:
+  29:avr_kernel.c  ****     stack[STACK_SIZE - 2] = swap_endiannes(task_3);
+  95               		.loc 1 29 0
+  96 0048 9093 0000 		sts stack+2044+1,r25
+  97 004c 8093 0000 		sts stack+2044,r24
+  30:avr_kernel.c  ****     current_task = 0;
+  98               		.loc 1 30 0
+  99 0050 1092 0000 		sts current_task+1,__zero_reg__
+ 100 0054 1092 0000 		sts current_task,__zero_reg__
+  31:avr_kernel.c  ****     SP = sp[current_task];
+ 101               		.loc 1 31 0
+ 102 0058 E091 0000 		lds r30,current_task
+ 103 005c F091 0000 		lds r31,current_task+1
+ 104 0060 EE0F      		lsl r30
+ 105 0062 FF1F      		rol r31
+ 106 0064 E050      		subi r30,lo8(-(sp))
+ 107 0066 F040      		sbci r31,hi8(-(sp))
+ 108 0068 8081      		ld r24,Z
+ 109 006a 9181      		ldd r25,Z+1
+ 110 006c 9EBF      		out __SP_L__+1,r25
+ 111 006e 8DBF      		out __SP_L__,r24
+ 112 0070 0895      		ret
+ 113               		.cfi_endproc
+ 114               	.LFE1:
+ 116               	.global	dispatcher
+ 118               	dispatcher:
+ 119               	.LFB3:
+  32:avr_kernel.c  **** }
+  33:avr_kernel.c  **** 
+  34:avr_kernel.c  **** void yield()
+  35:avr_kernel.c  **** {
+  36:avr_kernel.c  ****     dispatcher();
+  37:avr_kernel.c  **** }
+  38:avr_kernel.c  **** 
+  39:avr_kernel.c  **** void dispatcher()
+  40:avr_kernel.c  **** {
+ 120               		.loc 1 40 0
+ 121               		.cfi_startproc
+ 122               	/* prologue: function */
+ 123               	/* frame size = 0 */
+ 124               	/* stack size = 0 */
+ 125               	.L__stack_usage = 0
+  41:avr_kernel.c  ****     sp[current_task] = SP;
+ 126               		.loc 1 41 0
+ 127 0072 E091 0000 		lds r30,current_task
+ 128 0076 F091 0000 		lds r31,current_task+1
+ 129 007a 8DB7      		in r24,__SP_L__
+ 130 007c 9EB7      		in r25,__SP_L__+1
+ 131 007e EE0F      		lsl r30
+ 132 0080 FF1F      		rol r31
+ 133 0082 E050      		subi r30,lo8(-(sp))
+ 134 0084 F040      		sbci r31,hi8(-(sp))
+ 135 0086 9183      		std Z+1,r25
+ 136 0088 8083      		st Z,r24
+  42:avr_kernel.c  ****     SAVE_CONTEXT;
+ 137               		.loc 1 42 0
+ 138               	/* #APP */
+ 139               	 ;  42 "avr_kernel.c" 1
+ 140 008a 0F92      		push   r0                      
+ 141 008c 0FB6      		in     r0, __SREG__            
+ 142 008e F894      		cli                            
+ 143 0090 0F92      		push   r0                      
+ 144 0092 1F92      		push   r1                      
+ 145 0094 1124      		clr    __zero_reg__            
+ 146 0096 2F92      		push   r2                      
+ 147 0098 3F92      		push   r3                      
+ 148 009a 4F92      		push   r4                      
+ 149 009c 5F92      		push   r5                      
+ 150 009e 6F92      		push   r6                      
+ 151 00a0 7F92      		push   r7                      
+ 152 00a2 8F92      		push   r8                      
+ 153 00a4 9F92      		push   r9                      
+ 154 00a6 AF92      		push   r10                     
+ 155 00a8 BF92      		push   r11                     
+ 156 00aa CF92      		push   r12                     
+ 157 00ac DF92      		push   r13                     
+ 158 00ae EF92      		push   r14                     
+ 159 00b0 FF92      		push   r15                     
+ 160 00b2 0F93      		push   r16                     
+ 161 00b4 1F93      		push   r17                     
+ 162 00b6 2F93      		push   r18                     
+ 163 00b8 3F93      		push   r19                     
+ 164 00ba 4F93      		push   r20                     
+ 165 00bc 5F93      		push   r21                     
+ 166 00be 6F93      		push   r22                     
+ 167 00c0 7F93      		push   r23                     
+ 168 00c2 8F93      		push   r24                     
+ 169 00c4 9F93      		push   r25                     
+ 170 00c6 AF93      		push   r26                     
+ 171 00c8 BF93      		push   r27                     
+ 172 00ca CF93      		push   r28                     
+ 173 00cc DF93      		push   r29                     
+ 174 00ce EF93      		push   r30                     
+ 175 00d0 FF93      		push   r31                     
+ 176 00d2 8DB7      		in     r24, __SP_L__           
+ 177 00d4 9EB7      		in     r25, __SP_H__           
+ 178 00d6 0196      		adiw   r24, 0x1                
+ 179 00d8 8D93      		st     x+, r24                 
+ 180 00da 9D93      		st     x+, r25                 
+ 181               		
+ 182               	 ;  0 "" 2
+  43:avr_kernel.c  ****     current_task = ((current_task + 1) & (NUM_TASKS-1));
+ 183               		.loc 1 43 0
+ 184               	/* #NOAPP */
+ 185 00dc 8091 0000 		lds r24,current_task
+ 186 00e0 9091 0000 		lds r25,current_task+1
+ 187 00e4 0196      		adiw r24,1
+ 188 00e6 8370      		andi r24,3
+ 189 00e8 9927      		clr r25
+ 190 00ea 9093 0000 		sts current_task+1,r25
+ 191 00ee 8093 0000 		sts current_task,r24
+  44:avr_kernel.c  ****     RESTORE_CONTEXT;
+ 192               		.loc 1 44 0
+ 193               	/* #APP */
+ 194               	 ;  44 "avr_kernel.c" 1
+ 195 00f2 CD91      		ld     r28, x+                 
+ 196 00f4 DD91      		ld     r29, x+                 
+ 197 00f6 2197      		sbiw   r28, 0x1                
+ 198 00f8 CDBF      		out    __SP_L__, r28           
+ 199 00fa DEBF      		out    __SP_H__, r29           
+ 200 00fc FF91      		pop    r31                     
+ 201 00fe EF91      		pop    r30                     
+ 202 0100 DF91      		pop    r29                     
+ 203 0102 CF91      		pop    r28                     
+ 204 0104 BF91      		pop    r27                     
+ 205 0106 AF91      		pop    r26                     
+ 206 0108 9F91      		pop    r25                     
+ 207 010a 8F91      		pop    r24                     
+ 208 010c 7F91      		pop    r23                     
+ 209 010e 6F91      		pop    r22                     
+ 210 0110 5F91      		pop    r21                     
+ 211 0112 4F91      		pop    r20                     
+ 212 0114 3F91      		pop    r19                     
+ 213 0116 2F91      		pop    r18                     
+ 214 0118 1F91      		pop    r17                     
+ 215 011a 0F91      		pop    r16                     
+ 216 011c FF90      		pop    r15                     
+ 217 011e EF90      		pop    r14                     
+ 218 0120 DF90      		pop    r13                     
+ 219 0122 CF90      		pop    r12                     
+ 220 0124 BF90      		pop    r11                     
+ 221 0126 AF90      		pop    r10                     
+ 222 0128 9F90      		pop    r9                      
+ 223 012a 8F90      		pop    r8                      
+ 224 012c 7F90      		pop    r7                      
+ 225 012e 6F90      		pop    r6                      
+ 226 0130 5F90      		pop    r5                      
+ 227 0132 4F90      		pop    r4                      
+ 228 0134 3F90      		pop    r3                      
+ 229 0136 2F90      		pop    r2                      
+ 230 0138 1F90      		pop    r1                      
+ 231 013a 0F90      		pop    r0                      
+ 232 013c 0FBE      		out    __SREG__, r0       
+ 233 013e 0F90      		pop    r0                      
+ 234               		
+ 235               	 ;  0 "" 2
+  45:avr_kernel.c  ****     SP = sp[current_task];
+ 236               		.loc 1 45 0
+ 237               	/* #NOAPP */
+ 238 0140 E091 0000 		lds r30,current_task
+ 239 0144 F091 0000 		lds r31,current_task+1
+ 240 0148 EE0F      		lsl r30
+ 241 014a FF1F      		rol r31
+ 242 014c E050      		subi r30,lo8(-(sp))
+ 243 014e F040      		sbci r31,hi8(-(sp))
+ 244 0150 8081      		ld r24,Z
+ 245 0152 9181      		ldd r25,Z+1
+ 246 0154 9EBF      		out __SP_L__+1,r25
+ 247 0156 8DBF      		out __SP_L__,r24
+ 248 0158 0895      		ret
+ 249               		.cfi_endproc
+ 250               	.LFE3:
+ 252               	.global	yield
+ 254               	yield:
+ 255               	.LFB2:
+  35:avr_kernel.c  **** {
+ 256               		.loc 1 35 0
+ 257               		.cfi_startproc
+ 258               	/* prologue: function */
+ 259               	/* frame size = 0 */
+ 260               	/* stack size = 0 */
+ 261               	.L__stack_usage = 0
+  36:avr_kernel.c  ****     dispatcher();
+ 262               		.loc 1 36 0
+ 263 015a 0C94 0000 		jmp dispatcher
+ 264               	.LVL6:
+ 265               		.cfi_endproc
+ 266               	.LFE2:
+ 268               	.global	current_task
+ 269               		.section .bss
+ 272               	current_task:
+ 273 0000 0000      		.zero	2
+ 274               	.global	sp
+ 275               		.data
+ 278               	sp:
+ 279 0000 0000      		.word	stack+506
+ 280 0002 0000      		.word	stack+1018
+ 281 0004 0000      		.word	stack+1530
+ 282 0006 0000      		.word	stack+2042
+ 283               		.comm	stack,2048,1
+ 284               		.text
+ 285               	.Letext0:
+ 286               		.file 2 "/usr/lib/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 avr_kernel.c
+     /tmp/ccxiCJnV.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccxiCJnV.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccxiCJnV.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccxiCJnV.s:5      *ABS*:000000000000003b __RAMPZ__
+     /tmp/ccxiCJnV.s:6      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccxiCJnV.s:7      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccxiCJnV.s:13     .text:0000000000000000 swap_endiannes
+     /tmp/ccxiCJnV.s:34     .text:0000000000000008 avr_kernel_init
+                            *COM*:0000000000000800 stack
+     /tmp/ccxiCJnV.s:272    .bss:0000000000000000 current_task
+     /tmp/ccxiCJnV.s:278    .data:0000000000000000 sp
+     /tmp/ccxiCJnV.s:118    .text:0000000000000072 dispatcher
+     /tmp/ccxiCJnV.s:254    .text:000000000000015a yield
+
+UNDEFINED SYMBOLS
+task_0
+task_1
+task_2
+task_3
+__do_copy_data
+__do_clear_bss
